@@ -1,0 +1,42 @@
+name: DevSecOps Security Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  security:
+    name: Security Scans
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Set up CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: "python, javascript"
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+       - name: Upload SARIF Report
+         uses: github/codeql-action/upload-sarif@v2
+         with:
+           sarif_file: results.sarif
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.REPO_USER }}" | docker login -u "${{ secrets.REPO_PWD }}" --password-stdin
+
+      - name: Scan Docker Image with Docker Scout
+        uses: docker/scout-action@v1
+        with:
+          image: your-dockerhub-username/devsecops-app:latest
+      - name: Docker Scout Vulnerability Analysis
+        uses: docker/scout-action@v1
+        with:
+          image: your-dockerhub-username/devsecops-app:latest
+          exit-on: critical
+
