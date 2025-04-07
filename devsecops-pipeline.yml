@@ -33,10 +33,10 @@ jobs:
       - name: Scan Docker Image with Docker Scout
         uses: docker/scout-action@v1
         with:
-          image: your-dockerhub-username/devsecops-app:latest
+          image: priyansh1007/devsecops-app:latest
       - name: Docker Scout Vulnerability Analysis
         uses: docker/scout-action@v1
         with:
-          image: your-dockerhub-username/devsecops-app:latest
+          image: priyansh1007/devsecops-app:latest
           exit-on: critical
 
